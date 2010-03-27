@@ -1,4 +1,2 @@
-*.rpm
-*.gz
-*.tar
-*.bz2
+*
+!*.spec
