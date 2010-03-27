@@ -1,0 +1,55 @@
+# This file defines a convienence macro, plack_handler_pkg, that the spec file
+# can invoke to generate subpackages for specific handlers.  We do this for
+# dependency reasons -- e.g. perl(Apache2::Log) is a correct dependency from
+# Plack::Handler::Apache2, yet we don't always want to force our users to
+# install mod_perl just to get plack on their system.
+#
+# We also maintain a "main_excludes" file.  This file contains %exclude
+# directives to keep the files we put in subpackages out of the main package;
+# 
+# The plack_handler_pkg_files can be invoked in prep to build out the file
+# lists for each subpackage.  Unfortunately, for a variety of reasons it's
+# proving to be difficult to incorporate this logic in the main macro.
+#
+# Chris Weyl <cweyl@alumni.drew.edu> 2010
+
+%global main_excludes %(eval "mktemp")
+
+%define plack_handler_pkg() %{expand:
+
+# rig our tests package to include this
+%%tests_subpackage_requires perl-Plack-Handler-%1 = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%package -n perl-Plack-Handler-%1
+Summary: Plack handlers for %1\
+Group: Development/Libraries\
+Requires: perl-Plack = %{?epoch:%{epoch}:}%{version}-%{release}\
+
+%description -n perl-Plack-Handler-%1
+This package provides the Plack handlers for %1.
+
+%files -n perl-Plack-Handler-%1 -f %1-list
+%defattr(-,root,root,-)
+
+}
+
+%define plack_handler_pkg_files() %{expand:
+
+__dir=`echo %1 | %{__perl} -pe  's!-!/!g'`
+__pkg=`echo %1 | %{__perl} -pe 's!-!::!g'`
+
+touch %1-list
+
+echo "%exclude %{perl_vendorlib}/Plack/Handler/${__dir}*" >> %{main_excludes}
+echo "%exclude %{_mandir}/man3/Plack::Handler::${__pkg}*" >> %{main_excludes}
+echo "%{perl_vendorlib}/Plack/Handler/${__dir}*" >> %1-list
+echo "%{_mandir}/man3/Plack::Handler::${__pkg}*" >> %1-list
+
+
+if [ -e lib/Plack/Server/${__dir}* ] ; then
+    echo "%exclude %{perl_vendorlib}/Plack/Server/${__dir}*" >> %{main_excludes}
+    echo "%{perl_vendorlib}/Plack/Server/${__dir}*" >> %1-list 
+fi
+
+}
+
