@@ -2,7 +2,7 @@
 %global dojo_dir      %{_datadir}/dojo
 
 Name:           dojo
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        The Dojo JavaScript Toolkit
 Source0:        http://download.dojotoolkit.org/release-%{version}/dojo-release-%{version}.tar.gz
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{dojo_dir}/
 
 %changelog
+* Fri Apr 02 2010 Chris Weyl <cweyl@alumni.drew.edu> 1.4.3-1
+- dojo 1.4.3
+
 * Fri Mar 26 2010 Chris Weyl <cweyl@alumni.drew.edu> 1.4.2-1
 - initial packaging
 
