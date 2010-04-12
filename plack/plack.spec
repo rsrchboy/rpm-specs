@@ -1,6 +1,6 @@
 Name:           plack
 Summary:        Perl Superglue for Web frameworks and Web Servers (PSGI toolkit)
-Version:        0.9920
+Version:        0.9929
 Release:        1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -30,8 +30,13 @@ BuildRequires:  perl(Test::TCP) >= 0.11
 BuildRequires:  perl(Try::Tiny)
 BuildRequires:  perl(URI) >= 1.36
 
+# optional tests
+BuildRequires:  perl(Authen::Simple::Password)
+BuildRequires:  perl(IO::Handle::Util)
+BuildRequires:  perl(Log::Dispatch::Array)
+
 Requires:       perl(Devel::StackTrace)
-Requires:       perl(Devel::StackTrace::AsHTML)
+Requires:       perl(Devel::StackTrace::AsHTML) >= 0.09
 Requires:       perl(File::ShareDir) >= 1.00
 Requires:       perl(Filesys::Notify::Simple)
 Requires:       perl(Hash::MultiValue) >= 0.05
@@ -88,6 +93,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
+export TEST_FCGI_CLIENT=1
 make test
 
 
@@ -103,6 +109,10 @@ rm %{main_excludes}
 %{_bindir}/*
 
 %changelog
+* Sun Apr 11 2010 Chris Weyl <cweyl@alumni.drew.edu> 0.9929-1
+- update to 0.9929
+- add additional optional test BR's for packages now up for review
+
 * Sat Mar 20 2010 Chris Weyl <cweyl@alumni.drew.edu> 0.9920-1
 - specfile by Fedora::App::MaintainerTools 0.006
 
