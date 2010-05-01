@@ -1,0 +1,2 @@
+event=ibm/bay MSTR 00000001 00000000
+action=/usr/local/sbin/ultrabay_insert

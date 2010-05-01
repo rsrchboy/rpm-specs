@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?> <!-- -*- SGML -*- --> 
+
+<deviceinfo version="0.2">
+  <device>
+
+    <!-- UltraBay Devices -->
+    <match key="storage.bus" string="scsi">
+      <match key="storage.physical_device" string="/org/freedesktop/Hal/devices/pci_8086_2653_scsi_host_0_scsi_device_lun0">
+        <merge key="storage.hotpluggable" type="bool">true</merge>
+      </match>
+    </match>
+
+  </device>
+</deviceinfo>

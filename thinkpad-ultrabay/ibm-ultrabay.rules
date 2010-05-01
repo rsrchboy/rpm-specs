@@ -1,0 +1,2 @@
+NV{BAY_EVENT}=="3", KERNEL=="bay.0", ACTION=="change", SUBSYSTEM=="platform", RUN+="/usr/local/sbin/ultrabay_eject"
+ENV{BAY_EVENT}=="1", KERNEL=="bay.0", ACTION=="change", SUBSYSTEM=="platform", RUN+="/usr/local/sbin/ultrabay_insert"

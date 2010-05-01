@@ -1,0 +1,58 @@
+#!/bin/bash
+ULTRABAY_SYSDIR='/sys/class/scsi_device/1:0:0:0/device'
+shopt -s nullglob
+
+# Umount the filesystem(s) backed by the given major:minor device(s)
+unmount_rdev() { perl - "$@" <<'EOPERL'  # let's do it in Perl
+	for $major_minor (@ARGV) {
+		$major_minor =~ m/^(\d+):(\d+)$/ or die;
+		push(@tgt_rdevs, ($1<<8)|$2);
+	}
+        # Sort by reverse length of mount point, to unmount sub-directories first
+        open MOUNTS,"</proc/mounts" or die "$!";
+        @mounts=sort { length($b->[1]) <=> length($a->[1]) } map { [ split ] } <MOUNTS>;
+        close MOUNTS;
+        foreach $m (@mounts) {
+                ($dev,$dir)=@$m;
+		next unless -b $dev;  $rdev=(stat($dev))[6];
+		next unless grep($_==$rdev, @tgt_rdevs);
+		system("umount","-v","$dir")==0  or  $bad=1;
+	}
+	exit 1 if $bad;
+EOPERL
+}
+
+# Get the UltraBay's /dev/foo block device node
+ultrabay_dev_node() {
+	UDEV_PATH="`readlink -e "$ULTRABAY_SYSDIR/block:"*`" || return 1
+	UDEV_NAME="`udevinfo -q name -p $UDEV_PATH`" || return 1
+	echo /dev/$UDEV_NAME
+}
+
+if [ -d $ULTRABAY_SYSDIR ]; then
+	sync
+	# Unmount filesystems backed by this device
+	unmount_rdev `cat $ULTRABAY_SYSDIR/block\:*/dev     \
+	                  $ULTRABAY_SYSDIR/block\:*/*/dev`  \
+	|| {
+		echo 10 > /proc/acpi/ibm/beep;  # error tone
+		exit 1;
+	}
+        sync
+        # Nicely power off the device
+	DEVNODE=`ultrabay_dev_node` && hdparm -Y $DEVNODE
+        # Let HAL+KDE notice the unmount and let the disk spin down
+	sleep 0.5
+	# Unregister this SCSI device:
+	sync
+	echo 1 > $ULTRABAY_SYSDIR/delete
+fi
+sync
+# Turn off power to the UltraBay:
+if [ -d /sys/devices/platform/bay.0 ]; then
+	echo 1 > /sys/devices/platform/bay.0/eject
+else
+	echo eject > /proc/acpi/ibm/bay
+fi
+# Tell the user we're OK
+echo 12 > /proc/acpi/ibm/beep
