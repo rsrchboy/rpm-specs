@@ -1,6 +1,6 @@
 Name:           plack
 Summary:        Perl Superglue for Web frameworks and Web Servers (PSGI toolkit)
-Version:        0.9929
+Version:        0.9935
 Release:        1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,7 @@ Requires:       perl(HTTP::Body) >= 1.06
 Requires:       perl(LWP) >= 5.814
 Requires:       perl(parent)
 Requires:       perl(Pod::Usage)
+Requires:       perl(Test::TCP) >= 0.11
 Requires:       perl(Try::Tiny)
 Requires:       perl(URI) >= 1.36
 
@@ -53,6 +54,7 @@ Requires:       perl(URI) >= 1.36
 %plack_handler_pkg Apache2
 %plack_handler_pkg FCGI 
 %plack_handler_pkg HTTP-Server
+%plack_handler_pkg Net-FastCGI
 # we don't have 1.3.x in Fedora :)
 #plack_handler_pkg Apache1
 
@@ -76,6 +78,7 @@ find . -type f -exec chmod -c -x {} +
 %plack_handler_pkg_files Apache2
 %plack_handler_pkg_files FCGI 
 %plack_handler_pkg_files HTTP-Server
+%plack_handler_pkg_files Net-FastCGI
 # not a typo leaving this in -- handles excluding the Apache1 files for us
 %plack_handler_pkg_files Apache1
 
@@ -109,6 +112,10 @@ rm %{main_excludes}
 %{_bindir}/*
 
 %changelog
+* Sat May 08 2010 Chris Weyl <cweyl@alumni.drew.edu> 0.9935-1
+- update to 0.9935
+- break out new handler subpackage -- Net-FastCGI
+
 * Sun Apr 11 2010 Chris Weyl <cweyl@alumni.drew.edu> 0.9929-1
 - update to 0.9929
 - add additional optional test BR's for packages now up for review
