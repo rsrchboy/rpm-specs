@@ -21,24 +21,15 @@ BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Test::More)
 
 Requires:       perl(Class::MOP) >= 0.84
-Requires:       perl(Moose)
-Requires:       perl(Moose::Role)
-Requires:       perl(namespace::autoclean)
-Requires:       perl(Sub::Exporter)
 
 %{?perl_default_filter}
 %{?perl_default_subpackage_tests}
 
 %description
-Often you want to create components that can be added to a class
-arbitrarily. This module makes it easy for the end user to use these
-components. Instead of requiring the user to create a named class with
-the desired roles applied, or apply roles to the instance one-by-one, he
-can just create a new class from yours with 'with_traits', and then
-instantiate that.There is also 'new_with_traits', which exists for
-compatability reasons. It accepts a 'traits' parameter, creates a new
-class with those traits, and then insantiates it. Class-
->new_with_traits( traits => [qw/Foo Bar/], foo => 42, bar => 1 )
+MooseX::Traits allows one to arbitrarily add components to an object as
+needed, w/o having to explicitly construct new classes: e.g.
+
+    Foo->with_traits('Bar')->new(...);
 
 %prep
 %setup -q -n MooseX-Traits-%{version}
@@ -65,7 +56,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README
+%doc Changes
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
