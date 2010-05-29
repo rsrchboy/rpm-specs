@@ -3,9 +3,9 @@ Summary:        FastCGI Perl bindings
 # needed to properly replace/obsolete fcgi-perl
 Epoch:          1
 Version:        0.71
-Release:        1%{?dist}
+Release:        2%{?dist}
 # same as fcgi
-License:        BSD
+License:        OML
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/FCGI-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/FCGI
@@ -18,6 +18,7 @@ Provides:       fcgi-perl =  %{epoch}:%{version}-%{release}
 Obsoletes:      fcgi-perl =< 2.4.0
 
 %{?perl_default_filter}
+%{?perl_default_subpackage_tests}
 
 %description
 %{summary}.
@@ -55,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat May 15 2010 Chris Weyl <cweyl@alumni.drew.edu> 1:0.71-2
+- fix license: BSD => OML
+
 * Sat May 08 2010 Chris Weyl <cweyl@alumni.drew.edu> 1:0.71-1
 - specfile by Fedora::App::MaintainerTools 0.006
 
