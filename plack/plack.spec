@@ -1,6 +1,6 @@
 Name:           plack
 Summary:        Perl Superglue for Web frameworks and Web Servers (PSGI toolkit)
-Version:        0.9935
+Version:        0.9937
 Release:        1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -112,6 +112,9 @@ rm %{main_excludes}
 %{_bindir}/*
 
 %changelog
+* Sat May 22 2010 Chris Weyl <cweyl@alumni.drew.edu> 0.9937-1
+- update to 0.9937
+
 * Sat May 08 2010 Chris Weyl <cweyl@alumni.drew.edu> 0.9935-1
 - update to 0.9935
 - break out new handler subpackage -- Net-FastCGI
